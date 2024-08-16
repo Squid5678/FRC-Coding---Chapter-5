@@ -7,20 +7,18 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterSubsystem;
 
-public class ShootRPMCommand extends Command {
+public class Shoot1000RPMCommand extends Command {
 
   private ShooterSubsystem shooter;
 
-  private double RPM;
+  private final double RPM = 1000;
 
 
   /** Creates a new ShootRPMCommand. */
-  public ShootRPMCommand(ShooterSubsystem shooter, double RPM) {
+  public Shoot1000RPMCommand(ShooterSubsystem shooter) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     this.shooter = shooter;
-    this.RPM = RPM;
-
     addRequirements(shooter);
   }
 
