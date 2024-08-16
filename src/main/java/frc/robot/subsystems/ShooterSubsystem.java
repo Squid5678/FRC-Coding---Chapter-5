@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +17,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
   private TalonFX shooterPrimary = new TalonFX(ShooterConstants.shooterPrimaryID);
   private TalonFX shooterFollower = new TalonFX(ShooterConstants.shooterFollowerID);
+
+  private VelocityVoltage velocityRequest;
 
   /*
    * CONFIG SECTION
@@ -32,6 +35,8 @@ public class ShooterSubsystem extends SubsystemBase {
 
     /* Follower setup */
     shooterFollower.setControl(new Follower(ShooterConstants.shooterPrimaryID, false));
+
+    velocityRequest  = new VelocityVoltage(0);
 
   }
 
@@ -56,6 +61,10 @@ public class ShooterSubsystem extends SubsystemBase {
     shooterPrimary.set(percent);
   }
 
+  public void runShooterVelocity(double RPM){
+      shooterPrimary.setControl(velocityRequest.withVelocity(RPM * ShooterConstants.RPMtoRPS));
+  }
+
   public void stop(){
     shooterPrimary.stopMotor();
   }
@@ -69,10 +78,16 @@ public class ShooterSubsystem extends SubsystemBase {
     return shooterPrimary.get();
   }
 
+  public double getRPM(){
+    return shooterPrimary.getVelocity().getValueAsDouble() * ShooterConstants.RPStoRPM;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
 
     SmartDashboard.putNumber("SHOOTER PERCENT OUT", getPercentOut());
+
+    SmartDashboard.putNumber("SHOOTER RPM", getRPM());
   }
 }

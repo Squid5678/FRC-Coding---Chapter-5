@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 /**
@@ -52,11 +53,21 @@ public final class Constants {
   public static class ShooterConstants {
     public static final int shooterPrimaryID = 6;
     public static final int shooterFollowerID = 7;
-    public static final TalonFXConfiguration configs = new TalonFXConfiguration();
+
+    public static final Slot0Configs PID = new Slot0Configs()
+        .withKP(2)
+        .withKI(0.001)
+        .withKD(0.05);
+    public static final TalonFXConfiguration configs = new TalonFXConfiguration()
+        .withSlot0(PID);
+
     public static final CurrentLimitsConfigs currentLimits = new CurrentLimitsConfigs()
         .withStatorCurrentLimit(80)
         .withStatorCurrentLimitEnable(true)
         .withSupplyCurrentLimitEnable(true);
     
+
+    public static final double RPMtoRPS = 1/60;
+    public static final double RPStoRPM = 1/RPMtoRPS;
   }
 }
