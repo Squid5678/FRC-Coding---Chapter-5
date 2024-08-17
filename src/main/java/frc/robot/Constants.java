@@ -67,7 +67,7 @@ public final class Constants {
         .withSupplyCurrentLimitEnable(true);
     
 
-    public static final double RPMtoRPS = 1/60;
+    public static final double RPMtoRPS = 1/60.0;
     public static final double RPStoRPM = 1/RPMtoRPS;
   }
 }
