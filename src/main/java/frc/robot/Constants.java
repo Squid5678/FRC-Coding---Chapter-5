@@ -57,7 +57,8 @@ public final class Constants {
     public static final Slot0Configs PID = new Slot0Configs()
         .withKP(2)
         .withKI(0.001)
-        .withKD(0.05);
+        .withKD(0.05)
+        .withKS(0.1);
     public static final TalonFXConfiguration configs = new TalonFXConfiguration()
         .withSlot0(PID);
 
