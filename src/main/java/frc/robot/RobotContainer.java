@@ -10,6 +10,7 @@ import frc.robot.commands.IntakeEjectCommand;
 import frc.robot.commands.RunIntakeCommand;
 import frc.robot.commands.ShootFastCommand;
 import frc.robot.commands.Shoot1000RPMCommand;
+import frc.robot.commands.ShootAtRPMCommand;
 import frc.robot.commands.ShootSlowCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -57,8 +58,8 @@ public class RobotContainer {
     m_driverController.button(2).whileTrue(new RunIntakeCommand(intakeSubsystem));
     m_driverController.button(3).toggleOnTrue(new IntakeEjectCommand(intakeSubsystem));
 
-    m_driverController.button(5).toggleOnTrue(new Shoot1000RPMCommand(shooterSubsystem));
-    m_driverController.button(6).toggleOnTrue(new ShootSlowCommand(shooterSubsystem));
+    m_driverController.button(5).toggleOnTrue(new ShootAtRPMCommand(shooterSubsystem, 1000));
+    m_driverController.button(6).toggleOnTrue(new ShootAtRPMCommand(shooterSubsystem, 3000));
   }
 
   /**

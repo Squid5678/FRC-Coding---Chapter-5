@@ -9,11 +9,19 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class ShooterSubsystem extends SubsystemBase {
+
+  private final FlywheelSim shooterSimModel = new FlywheelSim(DCMotor.getKrakenX60(2), 1, 0.006);
 
   private TalonFX shooterPrimary = new TalonFX(ShooterConstants.shooterPrimaryID);
   private TalonFX shooterFollower = new TalonFX(ShooterConstants.shooterFollowerID);
@@ -90,4 +98,26 @@ public class ShooterSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("SHOOTER RPM", getRPM());
   }
+
+  @Override
+  public void simulationPeriodic() {
+   var talonFXSim = shooterPrimary.getSimState();
+
+   // set the supply voltage of the TalonFX
+   talonFXSim.setSupplyVoltage(RobotController.getBatteryVoltage());
+
+   // get the motor voltage of the TalonFX
+   var motorVoltage = talonFXSim.getMotorVoltage();
+
+   // use the motor voltage to calculate new position and velocity
+   // using WPILib's DCMotorSim class for physics simulation
+   shooterSimModel.setInputVoltage(motorVoltage);
+   shooterSimModel.update(0.020); // assume 20 ms loop time
+
+   // apply the new rotor position and velocity to the TalonFX;
+   // note that this is rotor position/velocity (before gear ratio), but
+   // DCMotorSim returns mechanism position/velocity (after gear ratio)
+   talonFXSim.setRotorVelocity(Units.radiansToRotations(shooterSimModel.getAngularVelocityRadPerSec())
+   );
+}
 }
